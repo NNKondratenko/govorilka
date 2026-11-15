@@ -5,9 +5,9 @@ import { createSpeech } from './speech.js';
 import { load, save, starsFor } from './store.js';
 
 const $ = (id) => document.getElementById(id);
-// Text glyphs, not emoji: Android draws ⏸ as an orange emoji square on the orange button.
-const PAUSE_ICON = '❚❚';
-const PLAY_ICON = '▶︎';
+// CSS-drawn icons: Android fonts render ⏸ as an emoji square and lack ❚.
+const PAUSE_ICON = '<i class="ico pause"></i>';
+const PLAY_ICON = '<i class="ico play"></i>';
 const speech = createSpeech();
 const state = load(localStorage);
 const persist = () => save(localStorage, state);
@@ -104,18 +104,18 @@ const trainer = new Trainer({
         break;
       case 'paused':
         running = false;
-        $('toggle').textContent = PLAY_ICON;
+        $('toggle').innerHTML = PLAY_ICON;
         say(d.next == null ? 'Всё! Ты молодец! 🎉' : 'Дальше? Нажми «следующая»');
         break;
       case 'finished':
         running = false;
-        $('toggle').textContent = PLAY_ICON;
+        $('toggle').innerHTML = PLAY_ICON;
         say('Все фразы пройдены! 🎉');
         break;
       case 'error':
         running = false;
         setMic(false);
-        $('toggle').textContent = PLAY_ICON;
+        $('toggle').innerHTML = PLAY_ICON;
         say(d.message);
         break;
     }
@@ -133,7 +133,7 @@ async function start(list, from = 0) {
 
 function resume() {
   running = true;
-  $('toggle').textContent = PAUSE_ICON;
+  $('toggle').innerHTML = PAUSE_ICON;
   trainer.session(queue, index, (p, res, i) => {
     index = res === 'success' || res === 'skipped' ? Math.min(i + 1, queue.length - 1) : i;
   });
@@ -144,7 +144,7 @@ function pause() {
   trainer.stop();
   speech.stop();
   setMic(false);
-  $('toggle').textContent = PLAY_ICON;
+  $('toggle').innerHTML = PLAY_ICON;
   say('Пауза');
 }
 
@@ -161,7 +161,7 @@ $('again').onclick = async () => {
   say('Слушай!');
   await speech.say(queue[index].text, { phraseId: queue[index].id });
   if (wasRunning) resume();
-  else say('Нажми ▶︎, когда будешь готов');
+  else say('Нажми кнопку, когда будешь готов');
 };
 $('back').onclick = () => {
   pause();

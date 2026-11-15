@@ -91,7 +91,10 @@ button { font: inherit; color: inherit; border: 0; cursor: pointer; }
 .mic span { position: relative; }
 .controls { display: flex; justify-content: center; gap: 18px; margin-top: auto; }
 .round { width: 68px; height: 68px; border-radius: 50%; background: var(--card); box-shadow: var(--shadow); font-size: 28px; }
-.round.main { width: 84px; height: 84px; background: var(--accent); color: var(--accent-ink); font-size: 30px; font-weight: 900; letter-spacing: -4px; }
+.round.main { width: 84px; height: 84px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; }
+.ico { display: block; }
+.ico.pause { width: 26px; height: 30px; border-left: 9px solid #fff; border-right: 9px solid #fff; box-sizing: border-box; }
+.ico.play { width: 0; height: 0; margin-left: 6px; border-top: 16px solid transparent; border-bottom: 16px solid transparent; border-left: 26px solid #fff; }
 
 #settings h2 { margin: 0; font-size: 22px; }
 .panel { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); padding: 16px; display: flex; flex-direction: column; gap: 14px; font-size: 16px; }
