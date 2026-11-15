@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#fff6e9">
+<title>Говорилка</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<section id="home" class="screen">
+  <header class="top">
+    <div class="logo"><span class="mascot">🦜</span><div><h1>Говорилка</h1><p>Повторяй за мной!</p></div></div>
+    <button class="icon gear" id="gear" aria-label="Для родителей (держите)">⚙️</button>
+  </header>
+  <div class="groups" id="groups"></div>
+  <button class="big play" id="playAll">▶ Играть</button>
+  <p class="foot" id="foot"></p>
+</section>
+
+<section id="play" class="screen hidden">
+  <header class="top">
+    <button class="icon" id="back" aria-label="Назад">✕</button>
+    <div class="dots" id="dots"></div>
+    <span class="group-title" id="groupTitle"></span>
+  </header>
+  <div class="card" id="card">
+    <div class="emoji" id="emoji"></div>
+    <div class="phrase" id="phrase"></div>
+  </div>
+  <div class="bubble" id="bubble"><span class="mascot small">🦜</span><span id="bubbleText">Слушай!</span></div>
+  <div class="mic" id="mic"><div class="ring" id="ring"></div><span>🎤</span></div>
+  <div class="controls">
+    <button class="round" id="again" aria-label="Послушать ещё раз">🔊</button>
+    <button class="round main" id="toggle" aria-label="Пауза">⏸</button>
+    <button class="round" id="next" aria-label="Следующая фраза">⏭</button>
+  </div>
+</section>
+
+<section id="settings" class="screen hidden">
+  <header class="top">
+    <button class="icon" id="settingsBack" aria-label="Назад">←</button>
+    <h2>Для родителей</h2>
+  </header>
+  <div class="panel">
+    <div id="micRow" class="row warn hidden"><span id="micText"></span><button class="small-btn" id="micBtn"></button></div>
+    <label class="field">Голос
+      <div class="inline"><select id="voice"></select><button class="small-btn" id="voiceTest">▶</button></div>
+    </label>
+    <label class="field">Скорость речи <span id="rateVal"></span>
+      <input type="range" id="rate" min="0.6" max="1.1" step="0.05">
+    </label>
+    <label class="field">Как строго проверять
+      <select id="strictness">
+        <option value="soft">Мягко — прощать мелкие ошибки</option>
+        <option value="normal">Обычно</option>
+        <option value="strict">Строго — слово в слово</option>
+      </select>
+    </label>
+    <label class="field">Попыток на фразу
+      <select id="attempts"><option>2</option><option>3</option><option>5</option></select>
+    </label>
+    <label class="check"><input type="checkbox" id="autoNext"> Сразу переходить к следующей фразе</label>
+    <label class="check"><input type="checkbox" id="showStress"> Показывать ударения</label>
+  </div>
+  <div class="panel" id="recPanel">
+    <h3>Свой голос</h3>
+    <p class="muted">Запишите фразы своим голосом или голосом логопеда — приложение будет произносить их так, с живыми интонациями и верными ударениями. Без записи звучит синтезатор речи.</p>
+    <div id="recList"></div>
+  </div>
+  <div class="panel">
+    <button class="small-btn danger" id="reset">Сбросить прогресс</button>
+    <p class="muted" id="about"></p>
+  </div>
+</section>
+
+<div class="overlay hidden" id="permission">
+  <div class="sheet">
+    <div class="mascot huge">🎤</div>
+    <h2>Нужен микрофон</h2>
+    <p>Говорилка слушает, как ребёнок повторяет фразы. Разрешение спросим один раз.</p>
+    <button class="big play" id="grant">Разрешить</button>
+  </div>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

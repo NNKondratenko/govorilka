@@ -1,0 +1,12 @@
+{
+  "name": "govorilka",
+  "private": true,
+  "type": "module",
+  "description": "Logopedic trainer for kids: web app (Android WebView) + tests for the matching and the training loop",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "serve": "node scripts/serve.js",
+    "screenshots": "node scripts/screenshots.js"
+  },
+  "engines": { "node": ">=22" }
+}

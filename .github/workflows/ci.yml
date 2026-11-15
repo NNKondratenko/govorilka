@@ -1,0 +1,53 @@
+name: CI
+
+# The Windows edit box has no JDK/Android SDK on purpose: the APK is built here.
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: Web logic tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: npm test
+
+  android:
+    name: APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Unit tests + release APK
+        run: ./gradlew testDebugUnitTest assembleRelease -PversionCode=${{ github.run_number }} --stacktrace
+      - name: Name the APK
+        run: |
+          mkdir -p out
+          cp app/build/outputs/apk/release/app-release.apk out/Govorilka.apk
+          ls -la out
+          "$ANDROID_HOME"/build-tools/*/apksigner verify --print-certs out/Govorilka.apk | head -3
+      - uses: actions/upload-artifact@v6
+        with:
+          name: govorilka-apk
+          path: out/Govorilka.apk
+      - name: Release on tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" out/Govorilka.apk --title "Говорилка $GITHUB_REF_NAME" --notes "APK для установки на Android без Google Play."
