@@ -7,7 +7,15 @@ OUT=${2:-shots}
 PKG=ru.govorilka.app
 mkdir -p "$OUT"
 
-dump() { adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1 || true; adb pull /sdcard/ui.xml "$OUT/ui.xml" >/dev/null 2>&1 || true; }
+dump_once() { adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1 || true; adb pull /sdcard/ui.xml "$OUT/ui.xml" >/dev/null 2>&1 || true; }
+# Chromium builds the WebView accessibility tree lazily: the first dump switches it on, later ones see the nodes.
+dump() {
+  for _ in 1 2 3 4; do
+    dump_once
+    grep -q 'text="[^"]' "$OUT/ui.xml" && return 0
+    sleep 2
+  done
+}
 shot() { adb exec-out screencap -p > "$OUT/$1.png"; dump; cp "$OUT/ui.xml" "$OUT/$1.xml" || true; echo "screenshot $1"; }
 has() { grep -q "$1" "$OUT/ui.xml"; }
 # Taps the centre of the first node whose text or content-desc contains $1.
