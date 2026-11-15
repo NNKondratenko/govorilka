@@ -102,7 +102,7 @@ class NativeBridge(private val activity: MainActivity, private val web: WebView)
         done(id, JSONObject.quote(permission()))
     }
 
-    fun setInsets(topCssPx: Int, bottomCssPx: Int) = js(
+    fun setInsets(topCssPx: Int, bottomCssPx: Int): Unit = js(
         "document.documentElement.style.setProperty('--inset-top','${topCssPx}px');" +
             "document.documentElement.style.setProperty('--inset-bottom','${bottomCssPx}px')",
     )
@@ -121,9 +121,11 @@ class NativeBridge(private val activity: MainActivity, private val web: WebView)
         recorder.stopPlayback()
     }
 
-    private fun done(id: Int, json: Any? = null) = js("window.__govorilka&&__govorilka.done($id,true,${quote(json)})")
-    private fun fail(id: Int, message: String) = js("window.__govorilka&&__govorilka.done($id,false,${quote(JSONObject().put("message", message))})")
-    private fun event(name: String, json: JSONObject) = js("window.__govorilka&&__govorilka.event(${JSONObject.quote(name)},${quote(json)})")
+    private fun done(id: Int, json: Any? = null): Unit = js("window.__govorilka&&__govorilka.done($id,true,${quote(json)})")
+    private fun fail(id: Int, message: String): Unit = js("window.__govorilka&&__govorilka.done($id,false,${quote(JSONObject().put("message", message))})")
+    private fun event(name: String, json: JSONObject): Unit = js("window.__govorilka&&__govorilka.event(${JSONObject.quote(name)},${quote(json)})")
     private fun quote(json: Any?) = if (json == null) "null" else JSONObject.quote(json.toString())
-    private fun js(code: String) = main.post { web.evaluateJavascript(code, null) }
+    private fun js(code: String) {
+        main.post { web.evaluateJavascript(code, null) }
+    }
 }
