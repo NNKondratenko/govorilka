@@ -102,9 +102,10 @@ class NativeBridge(private val activity: MainActivity, private val web: WebView)
         done(id, JSONObject.quote(permission()))
     }
 
+    /** Safe-area insets as CSS variables. May run before the page exists: then onPageFinished applies them again. */
     fun setInsets(topCssPx: Int, bottomCssPx: Int): Unit = js(
-        "document.documentElement.style.setProperty('--inset-top','${topCssPx}px');" +
-            "document.documentElement.style.setProperty('--inset-bottom','${bottomCssPx}px')",
+        "(function(){var r=document.documentElement;if(!r)return;" +
+            "r.style.setProperty('--inset-top','${topCssPx}px');r.style.setProperty('--inset-bottom','${bottomCssPx}px')})()",
     )
 
     fun release() {
